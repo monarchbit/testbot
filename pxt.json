@@ -4,8 +4,9 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*"
-        "SSD1306_OLED": "github:tinkertanker/pxt-oled-ssd1306#v2.0.13"
+        "microphone": "*",
+        "SSD1306_OLED": "github:tinkertanker/pxt-oled-ssd1306#v2.0.13",
+        "neopixel": "github:Microsoft/pxt-neopixel#v0.7.3"
     },
     "files": [
         "main.blocks",
