@@ -210,7 +210,7 @@ namespace blubot {
     //% subcategory="Inputs & Outputs"
     export function sonar(unit: RBPingUnit): number {
         // send pulse
-        let maxCmDistance = 500;
+        let maxCmDistance = 700;
         let d = 10;
         pins.setPull(sonarDPin, PinPullMode.PullNone);
         for (let x = 0; x < 10; x++) {
