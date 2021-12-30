@@ -63,9 +63,11 @@ namespace blubot {
     let rMotorD1 = DigitalPin.P16;
     let rMotorA0 = AnalogPin.P2;
     let sonarDPin = DigitalPin.P11;
-    function clamp(value: number, min: number, max: number): number {
+
+ function clamp(value: number, min: number, max: number): number {
         return Math.max(Math.min(max, value), min);
     }
+    
     /**
     * Test Motor function. TB6612FNG Driver - STBY-14,M1-PWM-P1,M1-DIR-P13,12, M2-PWM-P2,M2-DIR-P15,16
     * @param unit desired conversion unit
