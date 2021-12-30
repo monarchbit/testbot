@@ -62,7 +62,7 @@ namespace blubot {
     let rMotorD0 = DigitalPin.P15;
     let rMotorD1 = DigitalPin.P16;
     let rMotorA0 = AnalogPin.P2;
-    let sonarDPin = DigitalPin.P11;
+    let sonarDPin = DigitalPin.P10;
 
  function clamp(value: number, min: number, max: number): number {
         return Math.max(Math.min(max, value), min);
