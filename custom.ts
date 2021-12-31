@@ -237,6 +237,64 @@ namespace blubot {
         ) {
 
     }
+
+    /**
+      * Move robot forward (or backward) at speed for milliseconds
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="RBGoms" block="go%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% speed.min=0 speed.max=100
+    //% weight=90
+    //% subcategory=Motors
+    //% group="New style blocks" BiasDirection
+    //% blockGap=8
+    export function goms(direction: MotorDirection, speed: number, milliseconds: number): void {
+        go(direction, speed);
+        basic.pause(milliseconds);
+        stop(BBStopMode.Coast);
+    }
+
+    /**
+      * Rotate robot in direction at speed
+      * @param direction direction to turn
+      * @param speed speed of motors (0 to 100). eg: 60
+      */
+    //% blockId="BBRotate" block="spin%direction|at speed%speed|\\%"
+    //% speed.min=0 speed.max=100 speed.defl=65
+    //% weight=80
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function rotate(direction: BiasDirection, speed: number): void {
+        if (direction == BiasDirection.Left) {
+            move(BBMotor.Left, MotorDirection.Reverse, speed);
+            move(BBMotor.Right, MotorDirection.Forward, speed);
+        }
+        else if (direction == BiasDirection.Right) {
+            move(BBMotor.Left, MotorDirection.Forward, speed);
+            move(BBMotor.Right, MotorDirection.Reverse, speed);
+        }
+    }
+
+    /**
+      * Rotate robot in direction at speed for milliseconds.
+      * @param direction direction to spin
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to spin for, then stop. eg: 400
+      */
+    //% blockId="BBRotatems" block="spin%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% speed.min=0 speed.max=100
+    //% weight=70
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function rotatems(direction: BiasDirection, speed: number, milliseconds: number): void {
+        rotate(direction, speed);
+        basic.pause(milliseconds);
+        stop(BBStopMode.Coast);
+    }
 /**
       * Stop robot by coasting slowly to a halt or braking
       * @param mode Brakes on or off
