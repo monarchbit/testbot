@@ -7,6 +7,18 @@ enum RBPingUnit {
     MicroSeconds
 }
 
+/**
+  * Enumeration of motors.
+  */
+enum BBMotor {
+    //% block="left"
+    Left,
+    //% block="right"
+    Right,
+    //% block="both"
+    Both
+}
+
 enum MotorDirection {
     //% block="forward"
     Forward,
@@ -64,9 +76,84 @@ namespace blubot {
     let rMotorA0 = AnalogPin.P2;
     let sonarDPin = DigitalPin.P10;
 
- function clamp(value: number, min: number, max: number): number {
+    function clamp(value: number, min: number, max: number): number {
         return Math.max(Math.min(max, value), min);
     }
+
+    // New Style Motor Blocks
+    // slow PWM frequency for slower speeds to improve torque
+    function setPWM(speed: number): void {
+        if (speed < 200)
+            pins.analogSetPeriod(AnalogPin.P0, 60000);
+        else if (speed < 300)
+            pins.analogSetPeriod(AnalogPin.P0, 40000);
+        else
+            pins.analogSetPeriod(AnalogPin.P0, 30000);
+    }
+
+    /**
+      * Move robot forward (or backward) at speed.
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="RBGo" block="go%direction|at speed%speed|\\%"
+    //% speed.min=0 speed.max=100 speed.defl=60
+    //% weight=100
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function go(direction: MotorDirection, speed: number): void {
+        move(BBMotor.Both, direction, speed);
+    }
+
+    /**
+      * Move individual motors forward or reverse
+      * @param motor motor to drive
+      * @param direction select forwards or reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      */
+    //% blockId="RBMove" block="move%motor|motor(s)%direction|at speed%speed|\\%"
+    //% weight=50
+    //% speed.min=0 speed.max=100
+    //% subcategory=Motors
+    //% group="New style blocks"
+    //% blockGap=8
+    export function move(motor: BBMotor, direction: MotorDirection, speed: number): void {
+        speed = clamp(speed, 0, 100) * 10.23;
+        setPWM(speed);
+        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
+        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        pins.digitalWritePin(stbyPin, 1);
+        if ((motor == BBMotor.Left) || (motor == BBMotor.Both)) {
+            if (direction == MotorDirection.Forward) {
+                //pins.digitalWritePin(stbyPin, 1);
+                pins.analogWritePin(lMotorA0, lSpeed);
+                pins.digitalWritePin(lMotorD0, 1);
+                pins.digitalWritePin(lMotorD1, 0);
+            }
+            else {
+                //pins.digitalWritePin(stbyPin, 1);
+                pins.analogWritePin(lMotorA0, lSpeed);
+                pins.digitalWritePin(lMotorD0, 0);
+                pins.digitalWritePin(lMotorD1, 1);
+            }
+        }
+        if ((motor == BBMotor.Right) || (motor == BBMotor.Both)) {
+            if (direction == MotorDirection.Forward) {
+               // pins.digitalWritePin(stbyPin, 1);
+                pins.analogWritePin(rMotorA0, rSpeed);
+                pins.digitalWritePin(rMotorD0, 1);
+                pins.digitalWritePin(rMotorD1, 0);
+            }
+            else {
+                //pins.digitalWritePin(stbyPin, 1);
+                pins.analogWritePin(rMotorA0, rSpeed);
+                pins.digitalWritePin(rMotorD0, 0);
+                pins.digitalWritePin(rMotorD1, 1);
+            }
+        }
+    }
+
     
     /**
     * Test Motor function. TB6612FNG Driver - STBY-14,M1-PWM-P1,M1-DIR-P13,12, M2-PWM-P2,M2-DIR-P15,16
