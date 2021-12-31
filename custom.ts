@@ -212,6 +212,7 @@ namespace blubot {
         // send pulse
         let maxCmDistance = 700;
         let d = 10;
+        let sonarDPin = DigitalPin.P10;
         pins.setPull(sonarDPin, PinPullMode.PullNone);
         for (let x = 0; x < 10; x++) {
             pins.digitalWritePin(sonarDPin, 0);
